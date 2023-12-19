@@ -1,0 +1,118 @@
+use db_practica2;
+
+CREATE TABLE Habitacion(
+	idHabitacion INT PRIMARY KEY NOT NULL,
+    habitacion VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Paciente(
+	idPaciente INT PRIMARY KEY NOT NULL,
+    edad INT NOT NULL,
+    genero VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE LogHabitacion(
+	idHabitacion INT NOT NULL,
+    timestampx VARCHAR(100) NOT NULL,
+    statusx VARCHAR(45) NOT NULL,
+    FOREIGN KEY (idHabitacion) REFERENCES Habitacion (idHabitacion)
+		ON DELETE NO ACTION
+        ON UPDATE NO ACTION       
+);
+
+CREATE TABLE LogActividades(
+	idLogActividades INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    timestampx VARCHAR(100) NOT NULL,
+    actividad VARCHAR(200) NOT NULL,
+	idHabitacion INT NOT NULL,
+	idPaciente INT NOT NULL,
+    FOREIGN KEY (idHabitacion) REFERENCES Habitacion (idHabitacion)
+		ON DELETE NO ACTION
+        ON UPDATE NO ACTION   ,
+    FOREIGN KEY (idPaciente) REFERENCES Paciente (idPaciente)
+		ON DELETE NO ACTION
+        ON UPDATE NO ACTION   
+);
+LOAD DATA LOCAL INFILE "C:\\Program Files\\MySQL\\MySQL Server 8.0\\Uploads\\Pacientes.csv"
+INTO TABLE Paciente
+CHARACTER SET 'latin1'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS 
+(idPaciente,edad,genero);
+
+select * from Paciente;
+
+SHOW VARIABLES LIKE "secure_file_priv";
+SHOW GLOBAL VARIABLES LIKE 'local_infile';
+SET GLOBAL local_infile=1;
+
+
+LOAD DATA LOCAL INFILE "C:\\Program Files\\MySQL\\MySQL Server 8.0\\Uploads\\Habitaciones.csv"
+INTO TABLE Habitacion
+CHARACTER SET 'latin1'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS 
+(idHabitacion,habitacion);
+
+
+#LOG HABITACIONES =======================================================================
+LOAD DATA LOCAL INFILE "C:\\Program Files\\MySQL\\MySQL Server 8.0\\Uploads\\LogHabitacion.csv"
+INTO TABLE LogHabitacion
+CHARACTER SET 'latin1'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS 
+(idHabitacion,timestampx,statusx);
+
+#LogActividades1 ==========================================
+LOAD DATA LOCAL INFILE "C:\\Program Files\\MySQL\\MySQL Server 8.0\\Uploads\\LogActividades1.csv"
+INTO TABLE LogActividades
+CHARACTER SET 'latin1'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS 
+(timestampx,actividad,idHabitacion,idPaciente);
+
+#LogActividades2 ==========================================
+LOAD DATA LOCAL INFILE "C:\\Program Files\\MySQL\\MySQL Server 8.0\\Uploads\\LogActividades2.csv"
+INTO TABLE LogActividades
+CHARACTER SET 'latin1'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS 
+(timestampx,actividad,idHabitacion,idPaciente);
+
+SELECT * FROM Habitacion;
+SELECT * FROM Paciente;
+SELECT * FROM LogHabitacion;
+SELECT * FROM LogActividades;
+
+SELECT (SELECT COUNT(*) FROM Habitacion) as Habitacion,  
+(SELECT COUNT(*) FROM Paciente) as Paciente,
+(SELECT COUNT(*) FROM LogHabitacion) as LogHabitacion,
+(SELECT COUNT(*) FROM LogActividades) as LogActividades;
+
+
+TRUNCATE TABLE LogActividades;
+TRUNCATE TABLE LogHabitacion;
+DELETE FROM Paciente WHERE idPaciente > 0;
+DELETE FROM Habitacion where idHabitacion > 0;
+
+
+CREATE TABLE backups(
+	idBackup  int auto_increment primary key,
+    nombre varchar(250)
+);
+
+select * from backups;
+
+
+
+CREATE TABLE bitacora(
+	idBitacora int auto_increment primary key not null,
+    usuario varchar(100),
+    accion varchar(500),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

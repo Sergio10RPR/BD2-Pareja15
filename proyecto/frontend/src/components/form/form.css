@@ -1,0 +1,19 @@
+.sidenav {
+    height: 100%;
+    background-color: #000;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+.imagen{
+    display: flex;
+    justify-content: center;
+}
+
+.main {
+    display: flex;
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  min-height: 100vh; 
+}
+
+

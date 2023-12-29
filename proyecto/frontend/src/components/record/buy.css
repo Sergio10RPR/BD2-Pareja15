@@ -1,0 +1,8 @@
+.hide-top{
+    z-index: -1;
+}
+
+.btn-update{
+    bottom: 300px;
+    position: relative;
+}

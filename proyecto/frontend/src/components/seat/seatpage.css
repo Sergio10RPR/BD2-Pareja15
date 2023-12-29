@@ -1,0 +1,61 @@
+.hide-top{
+  z-index: -1;
+}
+
+h1 {
+  text-align: center;
+}
+
+.container {
+  width: 700px;
+  margin: auto;
+}
+
+.grid td {
+  width: 150px;
+  height: 50px;
+  /*padding: 50px 30px;*/
+  border: 2px solid rgb(0, 0, 0);
+  text-align: center;
+  float: left;
+  margin: 5px;
+}
+
+.grid td:hover {
+  opacity: .7;
+  cursor: pointer;
+}
+
+.reserved {
+  /*background: rgb(69, 69, 69);*/
+  color: #000;
+  display: inline-block;
+}
+
+.reserved::after {
+    content: '🔴'
+}
+
+.available::after {  
+    content: '🟢'
+}
+
+.available {
+  color: #333;
+}
+
+li {
+  list-style: none;
+}
+
+.left{
+  float: left;
+}
+
+.right{
+  float: right;
+}
+
+.container-reserved{
+  overflow: hidden;
+}

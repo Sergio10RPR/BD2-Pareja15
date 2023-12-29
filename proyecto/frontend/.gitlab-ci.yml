@@ -1,0 +1,86 @@
+stages: # List of stages for jobs, and their order of execution
+  - build
+  - test
+  - delivery
+
+#execute in features and develop branches-------------------------------------------
+build_front_job:
+  image: node:18-bullseye
+  only:
+      refs:
+        - /^feature.*$/
+        - develop
+      changes:
+        - frontend/**/*
+  stage: build
+  tags:
+    - desarrollo
+  script:
+    - cd "$CI_PROJECT_DIR/frontend"
+    - npm install
+
+#execute in features and develop branches-------------------------------------------
+test_front_dummy_job:
+  only:
+      refs:
+        - /^feature.*$/
+        - develop
+  stage: test
+  tags:
+    - desarrollo
+  script:
+    - echo "Dummy test in Frontend, 1.0.4"
+
+test_front_job:
+  image: node:18-bullseye
+  needs:
+    - job: test_front_dummy_job
+  only:
+      refs:
+        - /^feature.*$/
+        - develop
+      changes:
+        - frontend/**/*
+  stage: test
+  tags:
+    - desarrollo
+  script:
+    - cd "$CI_PROJECT_DIR/frontend"
+    - npm install
+    - npm test
+
+#execute in main branch-------------------------------------------------------------
+delivery_front_dummy_job:
+  only:
+      refs:
+        - main
+  stage: delivery
+  tags:
+    - despliegue
+  script:
+    - echo "Dummy delivery in Frontend, 1.0.5"
+
+delivery_front_job:
+  image: docker:latest
+  only:
+      refs:
+        - main
+      changes:
+        - frontend/**/*
+  stage: delivery
+  tags:
+    - despliegue
+  services:
+    - name: docker:dind
+      alias: thedockerhost
+  variables:
+    DOCKER_HOST: tcp://thedockerhost:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - cd "$CI_PROJECT_DIR/frontend"
+    - docker build -t diegobaggins/pr_frontend:latest .
+    - docker push diegobaggins/pr_frontend:latest
+    - docker logout $CI_REGISTRY
